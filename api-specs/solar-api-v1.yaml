@@ -5,6 +5,8 @@ info:
   version: 1.0.0
 servers:
   - url: https://api.34-110-134-67.nip.io
+security:
+  - ApiKeyAuth: []
 paths:
   /solar:
     post:
@@ -62,6 +64,11 @@ paths:
                     type: string
                     example: fdsjkj3k2jk23j
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: x-api-key
+      in: header
   schemas:
     SolarEstimation:
       description: >-
