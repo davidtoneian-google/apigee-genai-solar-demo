@@ -44,7 +44,7 @@ function insertMessage() {
   $('.message-input').val(null);
   scrollToBottom();
 
-  testMessage("If this question contains an address please return the address text, or else return 'no'.", msg)
+  testMessage("If this question contains an address and is asking about solar please return the address text, or else return 'no'.", msg)
   .then((response) => {
     if (response == "no") {
       chatMessage(msg)
@@ -66,16 +66,14 @@ function insertMessage() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        let solarResponse = JSON.parse(data["outputParameters"]["`Task_2_responseBody`"]);
-
-        // console.log(solarResponse["solarPotential"]["solarPanelConfigs"][solarResponse["solarPotential"]["solarPanelConfigs"].length - 1]);
-        let lastResult = solarResponse["solarPotential"]["solarPanelConfigs"][solarResponse["solarPotential"]["solarPanelConfigs"].length - 1];
+        let solarResponse = data["outputParameters"]["output"];
 
         addResponse(`Based on our calucations, this is the maximum amount of solar panels that your roof could hold:
-  * Maximum number of panels: ${lastResult["panelsCount"]}
-  * Maximum hours of sunshine per year: ${solarResponse["solarPotential"]["maxSunshineHoursPerYear"]}        
-  * Total kWh produced per year: ${lastResult["yearlyEnergyDcKwh"]}
-  * Market value of energy produced per year: ${(parseFloat(lastResult["yearlyEnergyDcKwh"]) * 0.12).toFixed(2) + " USD"}
+  * Maximum number of panels: ${solarResponse["maxArrayPanelsCount"]}
+  * Maximum hours of sunshine per year: ${solarResponse["maxSunshineHoursPerYear"]}        
+  * Total kWh produced per year: ${parseFloat(solarResponse["maxArrayPanelsCount"]) * parseFloat(solarResponse["maxSunshineHoursPerYear"]) + 400}
+  * Market value of energy produced per year: $$
+  * Average cost to install panels:
 `);
         
         addResponse(`Based on that high solar potential, you should break even on the investment in 10-12 years. We can also offer financing for the up-front investment, just click on this link to get a personalized offer. Thank you for using our service!`);

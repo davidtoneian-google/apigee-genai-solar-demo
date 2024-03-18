@@ -1,8 +1,3 @@
-NAME=solar-service
-PROJECT=apigee-test38
-REGION=europe-west1
-AI_REGION=us-central1
-API_PATH=
 
 # Create artifact registry, if needed
 gcloud artifacts repositories create docker-registry --repository-format=docker \
