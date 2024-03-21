@@ -8,7 +8,7 @@ servers:
 security:
   - ApiKeyAuth: []
 paths:
-  /solar:
+  /v1/solar-service:
     post:
       operationId: getSolarEstimation
       description: Gets a solar energy potential estimation based on an address.
@@ -34,35 +34,23 @@ paths:
                 $ref: '#/components/schemas/SolarEstimation'
           description: Solar panel estimation created successfully for the given address.
       summary: Create a new solar panel estimation for a given address.
-  /solar-image:
+  /v1/solar-service/question:
     post:
-      operationId: getSolarImage
-      description: Gets an image preview of how the solar panels would look on the user's house
+      operationId: answerSolarQuestion
+      description: Answers general questions about solar energy.
       requestBody:
-        description: A description of the user's house
+        description: A question about solar energy.
         content:
           application/json:
             schema:
               type: object
-              description: A description of the user's house
+              description: The question about solar energy.
               properties:
-                description:
-                  description: A description of the user's house, so how many stories it has, what kind of roof, etc..
+                question:
+                  description: The question text about solar energy.
                   type: string
-                  example: A bungalow with a slanted roof pointing south
-      responses:
-        '200':
-          description: an image of the user's house with solar panels
-          content:
-            application/json:
-              schema:
-                type: object
-                description: an image of the house with solar panels
-                properites:
-                  image:
-                    description: Image data in base64 of the user's house with solar panels
-                    type: string
-                    example: fdsjkj3k2jk23j
+                  example: What are the most efficient types of solar panels?
+              example: { "question": "What are the most efficient types of solar panels?"}
 components:
   securitySchemes:
     ApiKeyAuth:
