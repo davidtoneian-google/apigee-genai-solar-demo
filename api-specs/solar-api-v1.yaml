@@ -51,6 +51,20 @@ paths:
                   type: string
                   example: What are the most efficient types of solar panels?
               example: { "question": "What are the most efficient types of solar panels?"}
+      responses:
+        '200':
+          description: Successfully retrieved answer to the solar energy question.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: The answer to the solar energy question.
+                properties:
+                  answer:
+                    description: The answer text to the solar energy question.
+                    type: string
+                    example: The most efficient solar panels are MVP solar panels.
+                example: { "answer": "The most efficient solar panels are MVP solar panels."}
 components:
   securitySchemes:
     ApiKeyAuth:
