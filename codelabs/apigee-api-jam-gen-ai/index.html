@@ -32,35 +32,35 @@
         <p class="image-container"><img style="width: 624.00px" src="img/4ca5c63277f7d968.png"></p>
 <p><strong>Last Updated: </strong>2024-03-15</p>
 <h2 is-upgraded><strong>Overview</strong></h2>
-<p>In this lab we are going to use the Apigee API Management platform to publish Gen AI models as Products, as well as to allow those products to be integrated into Gen AI LLM chat experience systems such as Vertex AI Conversations and ChatGPT.</p>
+<p>In this lab we are going to use the <strong>Apigee API Platform</strong> to first design and publish an API to an example backend service (in this case the Google Maps Solar API), and then use the new <strong>Tools</strong> feature in <strong>Vertex Conversations</strong> to let users utilize this API in their LLM conversations. And finally we&#39;re going to publish a custom LLM model through our API, bringing security and ecosystem access to our Gen AI models and features.</p>
 <h3 is-upgraded><strong>Why APIs with Gen AI?</strong></h3>
-<p>Why do Gen AI models need APIs? It&#39;s quite simple: once you publish or want to utilize a Gen AI model, you will need to manage its visibility to users, secure access it using different IDP systems, enforce traffic management on who and how much it can be accessed, and generally have monitoring and analytics in place to make sure that only authorized users are using the model, and that its use is in a compliant and safe manner. The cloud Gen AI platforms such as Vertex AI just offer built-in service or user account security with their native IDP, but none of the above management features that are needed to publish and offer the model as a service to different types of users (perhaps outside of Google Cloud, 3rd parties, etc..).</p>
-<p>Additionally Apigee can make your existing APIs consumable by Gen AI LLM conversation agents, meaning there is a whole new category of API clients (LLM agents) that can offer growth and expansion for existing APIs.</p>
+<p>Why do Gen AI models need APIs? It&#39;s quite simple: once you publish or want to utilize a Gen AI model, you will need to manage its visibility to users, secure access to it using identity access controls such as OAuth 2.0, enforce traffic management on who and how much it can be accessed, and generally have monitoring and analytics in place to make sure that the model is being used as intended by its target users. Cloud AI platforms such as Vertex AI offer built-in identity access with their native systems such as Google Cloud IAM, but do not offer support secure ecosystem publishing or the monetizing of model access. That&#39;s where Apigee comes in!</p>
+<p>Additionally, Apigee can make your existing APIs consumable by Gen AI LLM conversation agents, meaning there is a whole new category of API clients that can offer growth and expansion for existing APIs.</p>
 <p class="image-container"><img style="width: 624.00px" src="img/a7b302b21ce908fc.png"></p>
-<p>In the diagram above you can see how APIs &amp; Integration can help connect, secure &amp; orchestrate the agents &amp; app experiences on the left side, with our Gen AI models &amp; services on the right side, and offer the scaling capabilities needed for developer &amp; partnership management, monetization of models &amp; services, and all with unified access, monitoring &amp; security.</p>
+<p>In the diagram above you can see how APIs &amp; Integration can help connect, secure &amp; orchestrate the agents &amp; app experiences on the left side with our Gen AI models &amp; services on the right side. This makes it possible to offer the scaling &amp; management capabilities needed for developer &amp; partnership management, monetization of models &amp; services, with unified access, monitoring &amp; security.</p>
 <h2 is-upgraded><strong>What you&#39;ll build</strong></h2>
-<p>In this codelab, you&#39;re going to deploy sample APIs that offer solar panel calculation and estimation services for property owners, as well as a custom LLM model that can answer any questions that property owners might have about installing solar panels on their property.</p>
+<p>In this codelab you&#39;re going to deploy a sample API that offer solar panel calculation and estimation services for property owners, as well as a custom LLM model that can answer any questions that property owners might have about installing solar panels on their property.</p>
 <ul>
 <li>The APIs will be published on Apigee X in a Qwiklabs Google Cloud environment.</li>
-<li>The backend services to offer solar panel logic is running in a no-code Application Integration flow (not covered in this lab, but easy to deploy optionally in your project as well, if wanted). Behind the flow are calls to the Google Maps Solar API service..</li>
+<li>The backend services to offer solar panel energy prediction and calculation logic is offered by the <a href="https://mapsplatform.google.com/intl/de/maps-products/solar/" target="_blank">Google Maps Solar API</a>, as an example of a powerful backend service can be leveraged for our new apps. Additionally the <a href="https://developers.google.com/maps/documentation/geocoding/overview" target="_blank">Google Maps Geocoding API</a> is used for address resolution.</li>
+<li>You can test the service in the <a href="https://solar-potential-kypkjw5jmq-uc.a.run.app/" target="_blank">Solar API demo</a> test client.</li>
 </ul>
 <p class="image-container"><img style="width: 624.00px" src="img/11aca2dff5b27603.png"></p>
 <ul>
-<li>A custom Gemini pro model to answer all solar power questions is also published behind the API.</li>
+<li>A Gemini pro model to answer all solar power questions is also published behind the API.</li>
 <li>You will configure a Vertex AI Conversation Agent that connects to the API and offers users the ability to to use the service in their chat to estimate the solar potential of the roof on their property, as well as to offer the solar LLM model detailed questions about solar energy for providers.</li>
-<li>You could also connect ChatGPT to your API as well (not covered in this lab).</li>
+<li>You could also connect ChatGPT to your API as well using the same mechanism (not covered in this lab). It&#39;s a multi-model world, so let&#39;s be prepared for it!</li>
 </ul>
-<aside class="warning"><p><strong>Note:</strong> To simplify this codelab, the Application Integration no-code flow to integrate the Google Maps Solar API is covered outside of this lab. However the flow asset is available in the Github repository, so if you want to deploy it yourself you can do so (and replace the default flow endpoint provided for this lab).</p>
-</aside>
+<p>Here&#39;s an overview of the architecture that we will build in this lab:</p>
+<p class="image-container"><img style="width: 680.35px" src="img/3048eb22e5985d8.png"></p>
+<p>The boxes in gray above are not covered in this lab, but can be easily explored as add-ons using the Apigee &amp; Cloud Armor documentation.</p>
 <h2 class="checklist" is-upgraded><strong>What you&#39;ll learn</strong></h2>
 <ul class="checklist">
-<li>How Apigee is used to secure and scale access to Gen AI features such as our solar Gemini model.</li>
-<li>How Apigee can connect our existing services (such as our Solar service) and new Gen AI models (our solar Gemini model) to LLM chat experiences such as Vertex AI Conversations.</li>
-<li>How to configure Apigee to secure and make both existing and new Gen AI services available to clients.</li>
-<li>How to configure Apigee to expose Gen AI models to any client.</li>
-<li>How to use Apigee as a universal access and management layer for any type of service or AI model, with consistent security, access management, traffic management &amp; monitoring and analytics.</li>
+<li>How Apigee is used to integrate existing services into LLM ecosystems such as Vertex AI Conversations using Gemini Pro.</li>
+<li>How to configure Apigee to secure and make both existing and new Gen AI models &amp; services  available to clients.</li>
+<li>How Google Cloud services such as Apigee &amp; Vertex AI make the process of publishing Gen AI models secure, scalable and endlessly extensible.</li>
 </ul>
-<p>This codelab is on the Apigee and Vertex AI aspects, but of course there are many adjacent services and features, such as the Application Integration workflows, that can also be explored.</p>
+<p>This codelab is on the Apigee and Vertex AI aspects of publishing and integrating Gen AI models with APIs, but of course there are many adjacent services and features, such as the Application Integration workflows or advanced Dialog Flow features that can also be explored.</p>
 <h2 is-upgraded><strong>What you&#39;ll need</strong></h2>
 <ul>
 <li>A recent version of Chrome (112 or later) </li>
@@ -275,7 +275,7 @@ EOF
 <p class="image-container"><img style="width: 679.25px" src="img/ed46c1dd31a997c.png"></p>
 <p>Now open the file <strong>api-specs/solar-api-v1.yaml</strong> in the editor, and replace the <strong>servers - url </strong>value with the base URL that you copied in the second above from the <strong>Trace</strong> window. Paste that value as the value in the yaml file as the <strong>url: </strong>- without the /solar-service path.</p>
 <p class="image-container"><img style="width: 683.50px" src="img/a8af7c359f2c69fa.png"></p>
-<p>Save the file, and keep it ready to use in a moment.</p>
+<p>Take a look at the Open API specification, and how the operations are documented so that any developer, as well as Vertex AI conversation agents, can understand and utilize the API. Save the file, and keep it ready to use in a moment. This specification was also generated by Gemini for Apigee, so Gen AI is helping us at every step of the way.</p>
 <h2 is-upgraded><strong>Create a Vertex Search and Conversation app</strong></h2>
 <p>Now open Vertex Search and Conversation in a new browser window.</p>
 <p><a href="https://console.cloud.google.com/gen-app-builder" target="_blank"><paper-button class="colored" raised>Open Vertex Search and Conversation</paper-button></a></p>
@@ -296,16 +296,44 @@ EOF
 <p>Now type &#34;hi&#34; in the Send message box to the right, and ask the bot if any address would be good for solar panels. The bot will automatically use the configured API to answer questions about solar panel evaluations for roofs at addresses, and you can add many more tools and data stores to enrich the skills of the bot.</p>
 <p class="image-container"><img style="width: 666.02px" src="img/2730a2942e8edba8.png"></p>
 <p>You can click on the <strong>Solar-Service</strong> bar in the conversation to open up the diagnostics information and see the exact request and response of the communication.</p>
+<p>Try asking the question in different ways, with and without giving an address, and see how the agent adapts and makes sure to ask the right questions to get the needed inputs before calling the API. It&#39;s impressive what&#39;s possible now with the need for any coding of the integration!</p>
 <p>Click on the <strong>Integrations</strong> menu item on the left side of the screen to see various channels where the bot can be added, as well as providing language services via API to other apps.</p>
+<h2 is-upgraded><strong>Test a Gen API model API</strong></h2>
+<p>Our API does more than just connect to the Solar API, it also offers a version of Gemini Pro as a solar Q&amp;A service to users. Go back to the Open API spec in the Cloud Shell editor, and find the <strong>/v1/solar-service/questions</strong> endpoint (in addition to the root <strong>/solar-service</strong> endpoint that we used to calculate the solar energy potential).</p>
+<p class="image-container"><img style="width: 679.25px" src="img/b5acbaec080fc30.png"></p>
+<p>Now take a look in the Apigee console at the proxy definition for our <strong>SolarService-v1</strong> API, and check out how we are using the Gemini API and prompting the model for requests through the <strong>/v1/solar-service/questions</strong> endpoint.</p>
+<p class="image-container"><img style="width: 666.43px" src="img/3405bc7209b71ccb.png"></p>
+<p>Let&#39;s test the questions endpoint now with some solar questions. We need to use the <strong>URL</strong> and <strong>API_KEY</strong> variables that we set previously when testing the solar calculation endpoint.</p>
+<pre><code>URL=&#34;$URL/questions&#34;
+
+curl -X POST &#34;$URL&#34; -i \
+-H &#34;Content-Type: application/json&#34; \
+-H &#34;x-api-key: $API_KEY&#34; \
+--data @- &lt;&lt; EOF
+
+{
+  &#34;question&#34;: &#34;what are the most efficient types of solar panels?&#34;
+}
+EOF
+</code></pre>
+<p>You should get a response from the model like this.</p>
+<pre><code>{
+   &#34;answer&#34; : &#34;The most efficient types of solar panels are monocrystalline solar panels. They are made from a single crystal of silicon and have an efficiency of around 20-25%. Polycrystalline solar panels are made from multiple crystals of silicon and have an efficiency of around 15-20%. Thin-film solar panels are made from a thin layer of semiconductor material and have an efficiency of around 10-15%.&#34;
+}
+
+</code></pre>
+<p>If you ask the model an unrelated question, such as &#34;why is the sky blue,&#34; the model shouldn&#39;t answer that question because of our prompt tuning in the API.</p>
+<p>Here we have an API endpoint in Apigee offering both backend service (Solar API) and Gen AI model (Gemini Pro) features to users with unified authentication &amp; authorization, traffic management, and analytics. Take some time to <a href="https://cloud.google.com/apigee/resources" target="_blank">explore further guides</a> on adding these features and more to your APIs.</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="Congratulations!" duration="0">
-        <p>Congratulations, you&#39;ve successfully published your Solar API on Apigee and integrated it with an LLM bot with no boilerplate or integration code needed! LLMs can automatically understand APIs, and so going forward they will be able to do a lot of the application integration work for us, as demonstrated today in this lab.</p>
+        <p>Congratulations, you&#39;ve successfully published your Solar API with backend and LLM integration on Apigee, and connected your first LLM app with Vertex AI Conversations. Check out these additional resources on adding more features to your API, and connect with the Apigee team in the <a href="https://www.googlecloudcommunity.com/gc/Apigee/bd-p/cloud-apigee" target="_blank">Apigee Community</a> below for more resources &amp; use-cases.</p>
 <h2 is-upgraded><strong>What&#39;s next?</strong></h2>
 <p>Check out some of these further resources</p>
 <ul>
+<li><a href="https://cloud.google.com/apigee/resources" target="_blank">Apigee Getting Started Guides &amp; Resources</a></li>
 <li><a href="https://cloud.google.com/learn/training/api-management" target="_blank">Apigee Learning Paths on SkillsBoost</a></li>
 <li><a href="https://www.youtube.com/playlist?list=PLIivdWyY5sqJCRHhuNgWXhISaBkGINFGp" target="_blank">YouTube Apigee Accelerator Series</a></li>
 <li><a href="https://cloud.google.com/apigee/resources?hl=en" target="_blank">Apigee Resources</a></li>
