@@ -14,7 +14,7 @@
         <Name>EV-GetInputs</Name>
       </Step>
       <Step>
-        <Condition>(apigee.latitude == null OR apigee.longitude == null) AND (apigee.address == null)</Condition>
+        <Condition>(apigee.latitude == null OR apigee.longitude == null) AND (apigee.address == null) AND (apigee.question == null)</Condition>
         <Name>RF-ValidateInputs</Name>
       </Step>
       <Step>
@@ -26,15 +26,6 @@
   <PostFlow name="PostFlow">
     <Request/>
     <Response>
-      <Step>
-        <Name>EV-GetSolarResults</Name>
-      </Step>
-      <Step>
-        <Name>JS-CalculateSolarData</Name>
-      </Step>
-      <Step>
-        <Name>AM-SetResponse</Name>
-      </Step>
     </Response>
   </PostFlow>
   <Flows>
@@ -57,7 +48,11 @@
     <Properties/>
     <VirtualHost>default</VirtualHost>
   </HTTPProxyConnection>
+  <RouteRule name="questions">
+    <Condition>proxy.pathsuffix MatchesPath "/questions"</Condition>
+    <TargetEndpoint>GeminiAPI</TargetEndpoint>
+  </RouteRule>
   <RouteRule name="default">
-    <TargetEndpoint>default</TargetEndpoint>
+    <TargetEndpoint>GoogleSolarAPI</TargetEndpoint>
   </RouteRule>
 </ProxyEndpoint>

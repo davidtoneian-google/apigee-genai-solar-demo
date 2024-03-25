@@ -13,6 +13,9 @@
     <Variable name="longitude">
       <JSONPath>$.longitude</JSONPath>
     </Variable>
+    <Variable name="question">
+      <JSONPath>$.question</JSONPath>
+    </Variable>
   </JSONPayload>
   <Source clearPayload="false">request</Source>
   <VariablePrefix>apigee</VariablePrefix>
