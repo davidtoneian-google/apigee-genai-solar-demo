@@ -221,15 +221,15 @@ apigeecli kvms entries create -m solar-keys -k gmaps_key -l $GMAPS_KEY -e $APIGE
 }
 EOF
 </code></pre>
-<p>You should get a<strong> HTTP/2 401 error response</strong> and a message that there was a <strong>failure to resolve the API key</strong>, which makes sense because we didn&#39;t send an API key.</p>
+<p>You should get a<strong> HTTP/2 401 error response</strong> and a message that there was a <strong>failure to resolve the API key</strong>, which makes sense because we didn&#39;t send an API key, or any type of authorization.</p>
 <p>If you check back in the <strong>Apigee debug</strong> screen, you should see the rejected API call displayed. You can step through the processing steps, and see where the API key validation failed.</p>
 <p class="image-container"><img style="width: 689.51px" src="img/c4cbea34aa624d6a.png"></p>
 <p>Let&#39;s now create an <strong>API Product </strong>and an <strong>App Subscription with Credentials</strong> to access this API. Normally the user would create this using a self-service portal (which we will also do later in this lab), but for the purposes of validating our API we will create it with apigeecli here first.</p>
 <pre><code>PRODUCT_NAME=&#34;Solar-API-v1&#34;
 apigeecli products create -n &#34;$PRODUCT_NAME&#34; \
   -m &#34;$PRODUCT_NAME&#34; \
-  -o &#34;$PROJECT&#34; -e eval \
-  -f auto -p &#34;Solar-Service-v1&#34; -t &#34;$TOKEN&#34;
+  -o &#34;$PROJECT&#34; -e $APIGEE_ENVIRONMENT \
+  -f auto -p &#34;Solar-Service-v1&#34; -t $(gcloud auth print-access-token)
 </code></pre>
 <p>Now check in the Apigee console and you should see the new product <strong>Solar-API-v1</strong>. A product can link together many REST APIs, GraphQL endpoints and gRPC operations together in one object that developers can subscribe and get access to.</p>
 <p><a href="https://console.cloud.google.com/apigee/apiproducts" target="_blank"><paper-button class="colored" raised>Open Apigee Products page</paper-button></a></p>
@@ -242,14 +242,14 @@ apigeecli products create -n &#34;$PRODUCT_NAME&#34; \
 <p>Create the developer in Apigee using apigeecli.</p>
 <pre><code>apigeecli developers create -n &#34;$DEVELOPER_EMAIL&#34; \
   -f &#34;Example&#34; -s &#34;Developer&#34; \
-  -u &#34;$DEVELOPER_EMAIL&#34; -o &#34;$PROJECT&#34; -t &#34;$TOKEN&#34;
+  -u &#34;$DEVELOPER_EMAIL&#34; -o &#34;$PROJECT&#34; -t $(gcloud auth print-access-token)
 </code></pre>
 <p>Now let&#39;s create an app subscription using the test developer account.</p>
 <pre><code>APP_NAME=example-app-1
 apigeecli apps create --name &#34;$APP_NAME&#34; \
   --email &#34;$DEVELOPER_EMAIL&#34; \
   --prods &#34;$PRODUCT_NAME&#34; \
-  --org &#34;$PROJECT&#34; --token &#34;$TOKEN&#34;
+  --org &#34;$PROJECT&#34; --token $(gcloud auth print-access-token)
 </code></pre>
 <p>Set the environment variable API_KEY to the &#34;consumerKey&#34; field in the output, and save the API key value in your notes for a later step.</p>
 <pre><code>API_KEY=consumerKey field in the output of the last command
@@ -320,7 +320,7 @@ EOF
 <p>Try asking the question in different ways, with and without giving an address, and see how the agent adapts and makes sure to ask the right questions to get the needed inputs before calling the API. It&#39;s impressive what&#39;s possible now with the need for any coding of the integration!</p>
 <p>Click on the <strong>Integrations</strong> menu item on the left side of the screen to see various channels where the bot can be added, as well as providing language services via API to other apps.</p>
 <h2 is-upgraded><strong>Test a Gen API model API</strong></h2>
-<p>Our API does more than just connect to the Solar API, it also offers a version of Gemini Pro as a solar Q&amp;A service to users. Go back to the Open API spec in the Cloud Shell editor, and find the <strong>/v1/solar-service/questions</strong> endpoint (in addition to the root <strong>/solar-service</strong> endpoint that we used to calculate the solar energy potential).</p>
+<p>Our API does more than just connect to the Solar API, it also offers a version of Gemini Pro as a solar Q&amp;A service to users. Go back to the Open API spec in the Cloud Shell editor, and find the <strong>/v1/solar-service/questions</strong> endpoint.</p>
 <p class="image-container"><img style="width: 679.25px" src="img/b5acbaec080fc30.png"></p>
 <p>Now take a look in the Apigee console at the proxy definition for our <strong>SolarService-v1</strong> API, and check out how we are using the Gemini API and prompting the model for requests through the <strong>/v1/solar-service/questions</strong> endpoint.</p>
 <p class="image-container"><img style="width: 666.43px" src="img/3405bc7209b71ccb.png"></p>
