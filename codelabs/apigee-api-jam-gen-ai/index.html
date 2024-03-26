@@ -94,7 +94,16 @@
 <p><a href="https://shell.cloud.google.com/" target="_blank"><paper-button class="colored" raised>Open Google Cloud Shell</paper-button></a></p>
 <p>Make sure you are signed-in to the <strong>gcloud</strong> command in the shell. If you are not sure, just run this command to sign-in.</p>
 <pre><code>gcloud auth login</code></pre>
-<p>You will be guided through the login procedure, and at the end should be authenticated with <strong>gcloud</strong> in your shell terminal.</p>
+<p>Now we need to set our environment information for further automation commands. Let&#39;s make a copy of the environment file 1_env.sh, edit with our own environment information, and then source it in our shell. </p>
+<pre><code>cp 1_env.sh 1_env.dev.sh</code></pre>
+<p>Edit the file <strong>1_env.dev.sh</strong> and set your GCP project and region information (your GCP Project Id and chosen region such as <strong>europe-west1</strong>). Also set your Apigee environment (if you are using an Apigee evaluation instance then it is <strong>eval</strong>).</p>
+<pre><code>export PROJECT=YOUR GCP PROJECT ID
+export REGION=YOUR GCP REGION
+export APIGEE_ENVIRONMENT=YOUR ENVIRONMENT</code></pre>
+<p>Save the file and run the following command to source the variables.</p>
+<pre><code>source 1_env.dev.sh</code></pre>
+<p>Now also set the project in gcloud.</p>
+<pre><code>gcloud config set project $PROJECT</code></pre>
 <h2 is-upgraded><strong>Install the apigeecli command line tool for Apigee</strong></h2>
 <p>We will be using the command-line tool <strong>apigeecli</strong>, to install just run this command in your shell.</p>
 <pre><code>curl -L https://raw.githubusercontent.com/apigee/apigeecli/main/downloadLatest.sh | sh -
@@ -119,14 +128,29 @@ cd apigee-genai-solar-demo</code></pre>
       </google-codelab-step>
     
       <google-codelab-step label="Deploy Apigee assets" duration="20">
-        <h2 is-upgraded>Storing keys</h2>
+        <h2 is-upgraded><strong>Set up your environment</strong></h2>
+<p>We need to automate the deployment of our demo assets, and so will be using the <a href="https://cloud.google.com/sdk/docs/install" target="_blank">gcloud CLI</a> to deploy a lot of our assets. Make sure <strong>gcloud</strong> is installed, and login with your project owner using the following command (if you are already logged in then you can skip this step).</p>
+<pre><code>gcloud auth login</code></pre>
+<p>Now we need to set our environment information for further automation commands. Let&#39;s make a copy of the environment file 1_env.sh, edit with our own environment information, and then source it in our shell. </p>
+<pre><code>cp 1_env.sh 1_env.dev.sh</code></pre>
+<p>Edit the file <strong>1_env.dev.sh</strong> and set your GCP project and region information (your GCP Project Id and chosen region such as <strong>europe-west1</strong>). Also set your Apigee environment (if you are using an Apigee evaluation instance then it is <strong>eval</strong>).</p>
+<pre><code>export PROJECT=YOUR GCP PROJECT ID
+export REGION=YOUR GCP REGION
+export APIGEE_ENVIRONMENT=YOUR ENVIRONMENT</code></pre>
+<p>Save the file and run the following command to source the variables.</p>
+<pre><code>source 1_env.dev.sh</code></pre>
+<p>Now also set the project in gcloud.</p>
+<pre><code>gcloud config set project $PROJECT</code></pre>
+<h2 is-upgraded><strong>Create a service account</strong></h2>
+<p>A service account in Google Cloud is used to authorize service-to-service communication, and is a great way to enforce authorization without storing keys anywhere (using <a href="https://cloud.google.com/docs/authentication/provide-credentials-adc" target="_blank">default application credentials</a>).</p>
+<p>Let&#39;s create a service account for any service-to-service communication in this demo.</p>
+<pre><code>gcloud iam service-accounts create solarservice \
+    --description=&#34;Solar service account&#34; \
+    --display-name=&#34;Solar service&#34;</code></pre>
+<h2 is-upgraded>Storing keys</h2>
 <p>In order to deploy an Apigee proxy that can use the Google Maps Solar API, we need a secure place to store our Google Maps API key. For that we are going to create an <a href="https://cloud.google.com/apigee/docs/api-platform/cache/key-value-maps" target="_blank">Apigee KeyValueMap (KVM)</a>, where we can encrypt and store any data needed at runtime, such as API keys.</p>
 <p>First we will create a KVM object in Apigee where we can store and access our keys. We will use <strong>apigeecli </strong>to create it by running this command.</p>
-<pre><code>TOKEN=$(gcloud auth print-access-token)
-PROJECT=YOUR_PROJECT_ID
-ENVIRONMENT=eval
-
-apigeecli kvms create -e $ENVIRONMENT -n solar-keys -o $PROJECT -t $TOKEN</code></pre>
+<pre><code>apigeecli kvms create -e $APIGEE_ENVIRONMENT -n solar-keys -o $PROJECT -t $(gcloud auth print-access-token)</code></pre>
 <p>You should see the following output confirming that our KVM was created.</p>
 <pre><code>{
         &#34;name&#34;: &#34;solar-keys&#34;,
@@ -138,12 +162,9 @@ apigeecli kvms create -e $ENVIRONMENT -n solar-keys -o $PROJECT -t $TOKEN</code>
 <aside class="special"><p><strong>Note:</strong> You need to navigate to your own environment / KVM page if your environment is not named ‘eval&#39; like in this example.</p>
 </aside>
 <p>Now let&#39;s store our Google Maps API key in the KVM. We can do this with another apigeecli command.</p>
-<pre><code>TOKEN=$(gcloud auth print-access-token)
-PROJECT=YOUR_PROJECT_ID
-ENVIRONMENT=eval
-GMAPS_KEY=YOUR_GMAPS_KEY
+<pre><code>GMAPS_KEY=YOUR_GMAPS_KEY
 
-apigeecli kvms entries create -m solar-keys -k gmaps_key -l $GMAPS_KEY -e $ENVIRONMENT -o $PROJECT</code></pre>
+apigeecli kvms entries create -m solar-keys -k gmaps_key -l $GMAPS_KEY -e $APIGEE_ENVIRONMENT -o $PROJECT</code></pre>
 <p>You should get a response like below confirming that the KVM entry has been stored.</p>
 <pre><code>{
         &#34;name&#34;: &#34;gmaps_key&#34;,
@@ -158,10 +179,10 @@ apigeecli kvms entries create -m solar-keys -k gmaps_key -l $GMAPS_KEY -e $ENVIR
 <pre><code>zip Solar-Service-v1.zip -r .
 </code></pre>
 <p>Upload the proxy bundle to our Apigee X org.</p>
-<pre><code>apigeecli apis import -o $PROJECT -f . -t $TOKEN
+<pre><code>apigeecli apis import -o $PROJECT -f . -t $(gcloud auth print-access-token)
 </code></pre>
 <p>Deploy the proxy to the eval environment (or change for your environment of choice).</p>
-<pre><code>apigeecli apis deploy -n Solar-Service-v1 -o $PROJECT -e $ENVIRONMENT -t $TOKEN --ovr
+<pre><code>apigeecli apis deploy -n Solar-Service-v1 -o $PROJECT -e $APIGEE_ENVIRONMENT -t $(gcloud auth print-access-token) -s solarservice@$PROJECT.iam.gserviceaccount.com --ovr
 </code></pre>
 <p>Now you can go to the Apigee console and see the newly deployed proxy and its status.</p>
 <p><a href="https://console.cloud.google.com/apigee/proxies" target="_blank"><paper-button class="colored" raised>Open Apigee Proxies page</paper-button></a></p>
