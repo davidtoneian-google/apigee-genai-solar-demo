@@ -92,18 +92,6 @@
 <h2 is-upgraded><strong>Open Google Cloud Shell or a local terminal</strong></h2>
 <p>You can work either in Google Cloud Shell, where you can run commands directly from your browser in a shell with Apigee and your Google Cloud resources (recommended). Alternatively, you can work locally in a terminal shell with gcloud installed and signed-in to your Google Cloud project.</p>
 <p><a href="https://shell.cloud.google.com/" target="_blank"><paper-button class="colored" raised>Open Google Cloud Shell</paper-button></a></p>
-<p>Make sure you are signed-in to the <strong>gcloud</strong> command in the shell. If you are not sure, just run this command to sign-in.</p>
-<pre><code>gcloud auth login</code></pre>
-<p>Now we need to set our environment information for further automation commands. Let&#39;s make a copy of the environment file 1_env.sh, edit with our own environment information, and then source it in our shell. </p>
-<pre><code>cp 1_env.sh 1_env.dev.sh</code></pre>
-<p>Edit the file <strong>1_env.dev.sh</strong> and set your GCP project and region information (your GCP Project Id and chosen region such as <strong>europe-west1</strong>). Also set your Apigee environment (if you are using an Apigee evaluation instance then it is <strong>eval</strong>).</p>
-<pre><code>export PROJECT=YOUR GCP PROJECT ID
-export REGION=YOUR GCP REGION
-export APIGEE_ENVIRONMENT=YOUR ENVIRONMENT</code></pre>
-<p>Save the file and run the following command to source the variables.</p>
-<pre><code>source 1_env.dev.sh</code></pre>
-<p>Now also set the project in gcloud.</p>
-<pre><code>gcloud config set project $PROJECT</code></pre>
 <h2 is-upgraded><strong>Install the apigeecli command line tool for Apigee</strong></h2>
 <p>We will be using the command-line tool <strong>apigeecli</strong>, to install just run this command in your shell.</p>
 <pre><code>curl -L https://raw.githubusercontent.com/apigee/apigeecli/main/downloadLatest.sh | sh -
@@ -129,8 +117,7 @@ cd apigee-genai-solar-demo</code></pre>
     
       <google-codelab-step label="Deploy Apigee assets" duration="20">
         <h2 is-upgraded><strong>Set up your environment</strong></h2>
-<p>We need to automate the deployment of our demo assets, and so will be using the <a href="https://cloud.google.com/sdk/docs/install" target="_blank">gcloud CLI</a> to deploy a lot of our assets. Make sure <strong>gcloud</strong> is installed, and login with your project owner using the following command (if you are already logged in then you can skip this step).</p>
-<pre><code>gcloud auth login</code></pre>
+<p>We need to automate the deployment of our demo assets, and so will be using the <a href="https://cloud.google.com/sdk/docs/install" target="_blank">gcloud CLI</a> to deploy a lot of our assets. Make sure <strong>gcloud</strong> is installed (installed by default in Cloud Shell).</p>
 <p>Now we need to set our environment information for further automation commands. Let&#39;s make a copy of the environment file 1_env.sh, edit with our own environment information, and then source it in our shell. </p>
 <pre><code>cp 1_env.sh 1_env.dev.sh</code></pre>
 <p>Edit the file <strong>1_env.dev.sh</strong> and set your GCP project and region information (your GCP Project Id and chosen region such as <strong>europe-west1</strong>). Also set your Apigee environment (if you are using an Apigee evaluation instance then it is <strong>eval</strong>).</p>
