@@ -141,12 +141,19 @@ export APIGEE_ENVIRONMENT=YOUR ENVIRONMENT</code></pre>
 <pre><code>source 1_env.dev.sh</code></pre>
 <p>Now also set the project in gcloud.</p>
 <pre><code>gcloud config set project $PROJECT</code></pre>
+<p>Also enable Vertex AI in our project using gcloud. </p>
+<pre><code>gcloud services enable aiplatform.googleapis.com</code></pre>
 <h2 is-upgraded><strong>Create a service account</strong></h2>
 <p>A service account in Google Cloud is used to authorize service-to-service communication, and is a great way to enforce authorization without storing keys anywhere (using <a href="https://cloud.google.com/docs/authentication/provide-credentials-adc" target="_blank">default application credentials</a>).</p>
 <p>Let&#39;s create a service account for any service-to-service communication in this demo.</p>
 <pre><code>gcloud iam service-accounts create solarservice \
     --description=&#34;Solar service account&#34; \
     --display-name=&#34;Solar service&#34;</code></pre>
+<p>Now give the account the role access to use the Gemini Pro model. This will allow our API (which will use this service account) to access Vertex AI models such as Gemini Pro.</p>
+<pre><code>gcloud projects add-iam-policy-binding $PROJECT \
+--member=&#34;serviceAccount:solarservice@$PROJECT.iam.gserviceaccount.com&#34; \
+--role=&#34;roles/aiplatform.user&#34;
+</code></pre>
 <h2 is-upgraded>Storing keys</h2>
 <p>In order to deploy an Apigee proxy that can use the Google Maps Solar API, we need a secure place to store our Google Maps API key. For that we are going to create an <a href="https://cloud.google.com/apigee/docs/api-platform/cache/key-value-maps" target="_blank">Apigee KeyValueMap (KVM)</a>, where we can encrypt and store any data needed at runtime, such as API keys.</p>
 <p>First we will create a KVM object in Apigee where we can store and access our keys. We will use <strong>apigeecli </strong>to create it by running this command.</p>
@@ -356,7 +363,7 @@ EOF
 <p>Now go to the <strong>Cloud Shell console</strong> at the bottom of the screen. Make sure that you are in the project directory with our source code, and type <strong>npm i &amp;&amp; node index.js</strong> and press Enter. This will install and run a small web app that uses the Dialogflow messenger integration for testing.</p>
 <p>Click on the button <strong>Web Preview</strong> at the top right of the screen to test your web app in your browser. Click on the button <strong>Preview on port 8080</strong>, and now test your Dialogflow app in a sample web page.</p>
 <p class="image-container"><img style="width: 673.06px" src="img/3c103d2662baa4ce.png"></p>
-<p>Try asking solar questions and about the potential for solar panels on different addresses, and observe how the bot uses our API.</p>
+<p>Try asking solar questions and about the potential for solar panels on different addresses, and observe how the app uses our API.</p>
 <p class="image-container"><img style="width: 656.50px" src="img/d87988ce81eba424.png"></p>
 <p>To review, we deployed <strong>Apigee APIs</strong> to the <strong>Google Maps Solar API,</strong> a <strong>Gemini Pro</strong> model, and the <strong>Vertex AI Conversations</strong> app that provided API &amp; LLM-powered features to users. </p>
 
