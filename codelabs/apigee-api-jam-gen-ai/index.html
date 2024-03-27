@@ -344,7 +344,21 @@ EOF
 
 </code></pre>
 <p>If you ask the model an unrelated question, such as &#34;why is the sky blue,&#34; the model shouldn&#39;t answer that question because of our prompt tuning in the API.</p>
-<p>Here we have an API endpoint in Apigee offering both backend service (Solar API) and Gen AI model (Gemini Pro) features to users with unified authentication &amp; authorization, traffic management, and analytics. Take some time to <a href="https://cloud.google.com/apigee/resources" target="_blank">explore further guides</a> on adding these features and more to your APIs.</p>
+<p>Here we have an API endpoint in Apigee offering both backend service (Solar API) and Gen AI model (Gemini Pro) features to users with unified authentication &amp; authorization, traffic management, and analytics. Take some time to <a href="https://cloud.google.com/apigee/resources" target="_blank">explore further guides</a> on adding more features to your APIs.</p>
+<p><strong>Deploy web test site</strong></p>
+<p>As a last step, let&#39;s deploy a test web site that uses our Vertex AI Conversations bot.</p>
+<p>In the cloud shell editor, open the file in the cloned project folder <strong>public/index.html</strong> and find the snippet at the bottom with code containing <strong>df-messenger</strong>. We&#39;re going to replace this with your own conversation bot.</p>
+<p>Now go back to the window with <strong>Vertex AI Conversations</strong>, or if it&#39;s now longer open, open it again here and go to the definition of your playbook app.</p>
+<p><a href="https://console.cloud.google.com/gen-app-builder" target="_blank"><paper-button class="colored" raised>Open Vertex Search and Conversation</paper-button></a></p>
+<p>Go to <strong>Integrations</strong>, and select <strong>Dialogflow Messenger</strong>. Enable the integration and copy the code snippet that is displayed.</p>
+<p class="image-container"><img style="width: 683.58px" src="img/f7655ea007ca981e.png"></p>
+<p>Replace the code snippet back in our <strong>index.html</strong> in the Cloud Shell editor with your own snippet, and save the file.</p>
+<p>Now go to the <strong>Cloud Shell console</strong> at the bottom of the screen. Make sure that you are in the project directory with our source code, and type <strong>npm i &amp;&amp; node index.js</strong> and press Enter. This will install and run a small web app that uses the Dialogflow messenger integration for testing.</p>
+<p>Click on the button <strong>Web Preview</strong> at the top right of the screen to test your web app in your browser. Click on the button <strong>Preview on port 8080</strong>, and now test your Dialogflow app in a sample web page.</p>
+<p class="image-container"><img style="width: 673.06px" src="img/3c103d2662baa4ce.png"></p>
+<p>Try asking solar questions and about the potential for solar panels on different addresses, and observe how the bot uses our API.</p>
+<p class="image-container"><img style="width: 656.50px" src="img/d87988ce81eba424.png"></p>
+<p>To review, we deployed <strong>Apigee APIs</strong> to the <strong>Google Maps Solar API,</strong> a <strong>Gemini Pro</strong> model, and the <strong>Vertex AI Conversations</strong> app that provided API &amp; LLM-powered features to users. </p>
 
 
       </google-codelab-step>
