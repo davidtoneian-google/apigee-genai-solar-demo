@@ -128,8 +128,9 @@ export APIGEE_ENVIRONMENT=YOUR ENVIRONMENT</code></pre>
 <pre><code>source 1_env.dev.sh</code></pre>
 <p>Now also set the project in gcloud.</p>
 <pre><code>gcloud config set project $PROJECT</code></pre>
-<p>Also enable Vertex AI in our project using gcloud. </p>
-<pre><code>gcloud services enable aiplatform.googleapis.com</code></pre>
+<p>Also enable Vertex AI and the Google Maps Geocoding API  in our project using gcloud. </p>
+<pre><code>gcloud services enable aiplatform.googleapis.com
+gcloud services enable geocoding-backend.googleapis.com </code></pre>
 <h2 is-upgraded><strong>Create a service account</strong></h2>
 <p>A service account in Google Cloud is used to authorize service-to-service communication, and is a great way to enforce authorization without storing keys anywhere (using <a href="https://cloud.google.com/docs/authentication/provide-credentials-adc" target="_blank">default application credentials</a>).</p>
 <p>Let&#39;s create a service account for any service-to-service communication in this demo.</p>
@@ -246,7 +247,7 @@ apigeecli apps create --name &#34;$APP_NAME&#34; \
   --org &#34;$PROJECT&#34; --token $(gcloud auth print-access-token)
 </code></pre>
 <p>Set the environment variable API_KEY to the &#34;consumerKey&#34; field in the output, and save the API key value in your notes for a later step.</p>
-<pre><code>API_KEY=consumerKey field in the output of the last command
+<pre><code>API_KEY=&#34;replace with consumerKey field from last command&#34;
 </code></pre>
 <p>Then retry the call to our endpoint, this time with our API key in the header of the request.</p>
 <pre><code>curl -X POST &#34;$URL&#34; -i \
@@ -313,7 +314,7 @@ EOF
 <p>You can click on the <strong>Solar-Service</strong> bar in the conversation to open up the diagnostics information and see the exact request and response of the communication.</p>
 <p>Try asking the question in different ways, with and without giving an address, and see how the agent adapts and makes sure to ask the right questions to get the needed inputs before calling the API. It&#39;s impressive what&#39;s possible now with the need for any coding of the integration!</p>
 <p>Click on the <strong>Integrations</strong> menu item on the left side of the screen to see various channels where the bot can be added, as well as providing language services via API to other apps.</p>
-<h2 is-upgraded><strong>Test a Gen API model API</strong></h2>
+<h2 is-upgraded><strong>Test a Gen AI model API</strong></h2>
 <p>Our API does more than just connect to the Solar API, it also offers a version of Gemini Pro as a solar Q&amp;A service to users. Go back to the Open API spec in the Cloud Shell editor, and find the <strong>/v1/solar-service/questions</strong> endpoint.</p>
 <p class="image-container"><img style="width: 679.25px" src="img/b5acbaec080fc30.png"></p>
 <p>Now take a look in the Apigee console at the proxy definition for our <strong>SolarService-v1</strong> API, and check out how we are using the Gemini API and prompting the model for requests through the <strong>/v1/solar-service/questions</strong> endpoint.</p>
@@ -341,7 +342,8 @@ EOF
 <p>Here we have an API endpoint in Apigee offering both backend service (Solar API) and Gen AI model (Gemini Pro) features to users with unified authentication &amp; authorization, traffic management, and analytics. Take some time to <a href="https://cloud.google.com/apigee/resources" target="_blank">explore further guides</a> on adding more features to your APIs.</p>
 <p><strong>Deploy web test site</strong></p>
 <p>As a last step, let&#39;s deploy a test web site that uses our Vertex AI Conversations bot.</p>
-<p>In the cloud shell editor, open the file in the cloned project folder <strong>public/index.html</strong> and find the snippet at the bottom with code containing <strong>df-messenger</strong>. We&#39;re going to replace this with your own conversation bot.</p>
+<p>In the cloud shell editor, open the file in the cloned project folder <strong>public/index.html</strong> and find the snippet at the bottom with code containing <strong>&lt;!-- BEGIN DIALOGFLOW SNIPPET –&gt;</strong>. We&#39;re going to replace this with your own conversation bot code.</p>
+<p class="image-container"><img style="width: 686.79px" src="img/eaec0fc04df6b533.png"></p>
 <p>Now go back to the window with <strong>Vertex AI Conversations</strong>, or if it&#39;s now longer open, open it again here and go to the definition of your playbook app.</p>
 <p><a href="https://console.cloud.google.com/gen-app-builder" target="_blank"><paper-button class="colored" raised>Open Vertex Search and Conversation</paper-button></a></p>
 <p>Go to <strong>Integrations</strong>, and select <strong>Dialogflow Messenger</strong>. Enable the integration and copy the code snippet that is displayed.</p>
