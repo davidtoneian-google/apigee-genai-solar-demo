@@ -130,7 +130,8 @@ export APIGEE_ENVIRONMENT=YOUR ENVIRONMENT</code></pre>
 <pre><code>gcloud config set project $PROJECT</code></pre>
 <p>Also enable Vertex AI and the Google Maps Geocoding API  in our project using gcloud. </p>
 <pre><code>gcloud services enable aiplatform.googleapis.com
-gcloud services enable geocoding-backend.googleapis.com </code></pre>
+gcloud services enable solar.googleapis.com 
+gcloud services enable geocoding-backend.googleapis.com</code></pre>
 <h2 is-upgraded><strong>Create a service account</strong></h2>
 <p>A service account in Google Cloud is used to authorize service-to-service communication, and is a great way to enforce authorization without storing keys anywhere (using <a href="https://cloud.google.com/docs/authentication/provide-credentials-adc" target="_blank">default application credentials</a>).</p>
 <p>Let&#39;s create a service account for any service-to-service communication in this demo.</p>
@@ -159,7 +160,7 @@ gcloud services enable geocoding-backend.googleapis.com </code></pre>
 <p>Now let&#39;s store our Google Maps API key in the KVM. We can do this with another apigeecli command.</p>
 <pre><code>GMAPS_KEY=YOUR_GMAPS_KEY
 
-apigeecli kvms entries create -m solar-keys -k gmaps_key -l $GMAPS_KEY -e $APIGEE_ENVIRONMENT -o $PROJECT</code></pre>
+apigeecli kvms entries create -m solar-keys -k gmaps_key -l $GMAPS_KEY -e $APIGEE_ENVIRONMENT -o $PROJECT -t $(gcloud auth print-access-token)</code></pre>
 <p>You should get a response like below confirming that the KVM entry has been stored.</p>
 <pre><code>{
         &#34;name&#34;: &#34;gmaps_key&#34;,
