@@ -281,9 +281,9 @@ EOF
 
       </google-codelab-step>
     
-      <google-codelab-step label="Configure Vertex Search and Conversations" duration="15">
+      <google-codelab-step label="Configure Vertex Agent Builder" duration="15">
         <h2 is-upgraded>Configure the Open API spec</h2>
-<p>We will now be using Vertex Search and Conversations to use an LLM (<strong>gemini-pro</strong> in this case) to automatically connect and interact with our API. This will be done using the Open API spec that is in the repository.</p>
+<p>We will now be using Vertex Agent Builder to use an LLM (<strong>gemini-pro</strong> in this case) to automatically connect and interact with our API. This will be done using the Open API spec that is in the repository.</p>
 <p>But first we need to replace the server URL with our newly deployed proxy. </p>
 <p>Click on the <strong>pencil icon</strong> in the Cloud Shell header to open the code editor.</p>
 <p class="image-container"><img style="width: 665.50px" src="img/aaa24328346d2703.png"></p>
@@ -345,8 +345,8 @@ EOF
 <p>As a last step, let&#39;s deploy a test web site that uses our Vertex AI Conversations bot.</p>
 <p>In the cloud shell editor, open the file in the cloned project folder <strong>public/index.html</strong> and find the snippet at the bottom with code containing <strong>&lt;!-- BEGIN DIALOGFLOW SNIPPET –&gt;</strong>. We&#39;re going to replace this with your own conversation bot code.</p>
 <p class="image-container"><img style="width: 686.79px" src="img/eaec0fc04df6b533.png"></p>
-<p>Now go back to the window with <strong>Vertex AI Conversations</strong>, or if it&#39;s now longer open, open it again here and go to the definition of your playbook app.</p>
-<p><a href="https://console.cloud.google.com/gen-app-builder" target="_blank"><paper-button class="colored" raised>Open Vertex Search and Conversation</paper-button></a></p>
+<p>Now go back to the window with <strong>Vertex AI Agent Builder</strong>, or if it&#39;s now longer open, open it again here and go to the definition of your playbook app.</p>
+<p><a href="https://console.cloud.google.com/gen-app-builder" target="_blank"><paper-button class="colored" raised>Open Vertex Agent Builder</paper-button></a></p>
 <p>Go to <strong>Integrations</strong>, and select <strong>Dialogflow Messenger</strong>. Enable the integration and copy the code snippet that is displayed.</p>
 <p class="image-container"><img style="width: 669.38px" src="img/c3a276ebb930ea41.png"></p>
 <p>Replace the code snippet back in our <strong>index.html</strong> in the Cloud Shell editor with your own snippet, and save the file.</p>
